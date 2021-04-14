@@ -8,7 +8,7 @@ import com.gaspardeelias.rssreaderdemo.repository.network.dto.LoginDto
 
 interface Repository {
     suspend fun register(user: String, password: String): ResultWrapper<String>
-    suspend fun login(user: String, password: String): ResultWrapper<LoginDto>
+    suspend fun login(user: String, password: String): ResultWrapper<String>
     suspend fun feedSubscribe(url: String): ResultWrapper<Feed>
     suspend fun getFeeds(): ResultWrapper<List<Feed>>
     suspend fun getArticles(feedId: Int): ResultWrapper<List<Article>>

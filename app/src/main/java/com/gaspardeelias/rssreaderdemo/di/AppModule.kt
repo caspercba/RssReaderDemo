@@ -1,11 +1,14 @@
 package com.gaspardeelias.rssreaderdemo.di
 
+import android.content.Context
 import com.gaspardeelias.rssreaderdemo.BuildConfig
 import com.gaspardeelias.rssreaderdemo.repository.RepositoryImpl
 import com.gaspardeelias.rssreaderdemo.repository.network.RssRetrofit
+import com.gaspardeelias.rssreaderdemo.utils.Prefs
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -46,5 +49,10 @@ object AppModule {
     @Singleton
     @Provides
     fun provideRepository(rssRetrofit: RssRetrofit) = RepositoryImpl(rssRetrofit)
+
+    @Singleton
+    @Provides
+    fun providePrefs(@ApplicationContext context: Context) = Prefs(context)
+
 
 }

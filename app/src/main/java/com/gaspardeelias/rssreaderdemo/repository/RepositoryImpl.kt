@@ -10,6 +10,7 @@ import com.gaspardeelias.rssreaderdemo.repository.network.dto.RegisterRequest
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import retrofit2.HttpException
 
 class RepositoryImpl(
     val rssRetrofit: RssRetrofit,
@@ -22,7 +23,7 @@ class RepositoryImpl(
         }
     }
 
-    override suspend fun login(user: String, password: String): ResultWrapper<LoginDto> {
+    override suspend fun login(user: String, password: String): ResultWrapper<String> {
         TODO("Not yet implemented")
     }
 
@@ -49,17 +50,17 @@ class RepositoryImpl(
     override suspend fun articleToggleRead(feedId: Int, articleId: Int): ResultWrapper<Boolean> {
         TODO("Not yet implemented")
     }
+}
 
-    suspend fun <T> safeApiCall(
-        dispatcher: CoroutineDispatcher,
-        apiCall: suspend () -> T
-    ): ResultWrapper<T> {
-        return withContext(dispatcher) {
-            try {
-                ResultWrapper.Success(apiCall.invoke())
-            } catch (throwable: Throwable) {
-                ResultWrapper.GenericError(throwable)
-            }
+suspend fun <T> safeApiCall(
+    dispatcher: CoroutineDispatcher,
+    apiCall: suspend () -> T
+): ResultWrapper<T> {
+    return withContext(dispatcher) {
+        try {
+            ResultWrapper.Success(apiCall.invoke())
+        } catch (throwable: Throwable) {
+            ResultWrapper.GenericError(throwable)
         }
     }
 }
