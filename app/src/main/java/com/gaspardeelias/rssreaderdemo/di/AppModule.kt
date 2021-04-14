@@ -1,6 +1,8 @@
 package com.gaspardeelias.rssreaderdemo.di
 
 import com.gaspardeelias.rssreaderdemo.BuildConfig
+import com.gaspardeelias.rssreaderdemo.repository.RepositoryImpl
+import com.gaspardeelias.rssreaderdemo.repository.network.RssRetrofit
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -38,5 +40,11 @@ object AppModule {
         .baseUrl(BASE_URL)
         .client(okHttpClient)
         .build()
+
+
+
+    @Singleton
+    @Provides
+    fun provideRepository(rssRetrofit: RssRetrofit) = RepositoryImpl(rssRetrofit)
 
 }

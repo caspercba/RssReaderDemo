@@ -2,6 +2,6 @@ package com.gaspardeelias.rssreaderdemo.repository.model
 
 sealed class ResultWrapper<out T> {
     data class Success<out T>(val value: T) : ResultWrapper<T>()
-    data class GenericError(val e: Exception) : ResultWrapper<Nothing>()
+    data class GenericError(val t: Throwable) : ResultWrapper<Nothing>()
     object NetworkError : ResultWrapper<Nothing>()
 }
