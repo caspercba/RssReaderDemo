@@ -2,6 +2,7 @@ package com.gaspardeelias.rssreaderdemo.di
 
 import android.content.Context
 import com.gaspardeelias.rssreaderdemo.BuildConfig
+import com.gaspardeelias.rssreaderdemo.repository.Repository
 import com.gaspardeelias.rssreaderdemo.repository.RepositoryImpl
 import com.gaspardeelias.rssreaderdemo.repository.network.RssRetrofit
 import com.gaspardeelias.rssreaderdemo.utils.Prefs
@@ -20,7 +21,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object AppModule {
     @Provides
-    fun provideBaseUrl() = "167.99.162.146/"
+    fun provideBaseUrl() = "http://167.99.162.146/"
 
     @Singleton
     @Provides
@@ -44,11 +45,13 @@ object AppModule {
         .client(okHttpClient)
         .build()
 
-
+    @Singleton
+    @Provides
+    fun provideRssRetrofit(retrofit: Retrofit) = retrofit.create(RssRetrofit::class.java)
 
     @Singleton
     @Provides
-    fun provideRepository(rssRetrofit: RssRetrofit) = RepositoryImpl(rssRetrofit)
+    fun provideRepository(rssRetrofit: RssRetrofit): Repository = RepositoryImpl(rssRetrofit)
 
     @Singleton
     @Provides

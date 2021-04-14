@@ -3,9 +3,8 @@ package com.gaspardeelias.rssreaderdemo.repository
 import com.gaspardeelias.rssreaderdemo.repository.model.Article
 import com.gaspardeelias.rssreaderdemo.repository.model.Feed
 import com.gaspardeelias.rssreaderdemo.repository.model.ResultWrapper
-import com.gaspardeelias.rssreaderdemo.repository.model.User
 import com.gaspardeelias.rssreaderdemo.repository.network.RssRetrofit
-import com.gaspardeelias.rssreaderdemo.repository.network.dto.LoginDto
+import com.gaspardeelias.rssreaderdemo.repository.network.dto.LoginRequest
 import com.gaspardeelias.rssreaderdemo.repository.network.dto.RegisterRequest
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -24,7 +23,9 @@ class RepositoryImpl(
     }
 
     override suspend fun login(user: String, password: String): ResultWrapper<String> {
-        TODO("Not yet implemented")
+        return safeApiCall(dispatcher) {
+            rssRetrofit.login(LoginRequest(user, password)).token
+        }
     }
 
     override suspend fun feedSubscribe(url: String): ResultWrapper<Feed> {
@@ -60,7 +61,16 @@ suspend fun <T> safeApiCall(
         try {
             ResultWrapper.Success(apiCall.invoke())
         } catch (throwable: Throwable) {
-            ResultWrapper.GenericError(throwable)
+            when(throwable) {
+                is HttpException -> {
+                    var body = throwable.code()
+                    ResultWrapper.NetworkError(body)
+                }
+                else -> {
+                    ResultWrapper.GenericError(throwable)
+                }
+            }
+
         }
     }
 }

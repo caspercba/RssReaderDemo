@@ -1,9 +1,8 @@
-package com.gaspardeelias.rssreaderdemo
+package com.gaspardeelias.rssreaderdemo.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.gaspardeelias.rssreaderdemo.ui.ListFragment
-import com.gaspardeelias.rssreaderdemo.ui.LoginFragment
+import com.gaspardeelias.rssreaderdemo.R
 import com.gaspardeelias.rssreaderdemo.utils.Prefs
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
