@@ -6,6 +6,7 @@ import com.gaspardeelias.rssreaderdemo.repository.model.ResultWrapper
 import com.gaspardeelias.rssreaderdemo.repository.network.RssRetrofit
 import com.gaspardeelias.rssreaderdemo.repository.network.dto.LoginRequest
 import com.gaspardeelias.rssreaderdemo.repository.network.dto.RegisterRequest
+import com.gaspardeelias.rssreaderdemo.repository.network.dto.RssSubscribeRequest
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -18,7 +19,7 @@ class RepositoryImpl(
 
     override suspend fun register(user: String, password: String): ResultWrapper<String> {
         return safeApiCall(dispatcher) {
-            rssRetrofit.register(RegisterRequest(user, password)).accessToken
+            rssRetrofit.register(RegisterRequest(user, password)).token
         }
     }
 
@@ -29,11 +30,17 @@ class RepositoryImpl(
     }
 
     override suspend fun feedSubscribe(url: String): ResultWrapper<Feed> {
-        TODO("Not yet implemented")
+        return safeApiCall(dispatcher) {
+            val dto = rssRetrofit.rssSubscribe(RssSubscribeRequest(url))
+            Feed(dto.id, dto.title, dto.url)
+        }
     }
 
     override suspend fun getFeeds(): ResultWrapper<List<Feed>> {
-        TODO("Not yet implemented")
+        return safeApiCall(dispatcher) {
+            rssRetrofit.getFeeds()
+                .map { dto -> Feed(id = dto.id, title = dto.title, url = dto.url) }
+        }
     }
 
     override suspend fun getArticles(feedId: Int): ResultWrapper<List<Article>> {
@@ -61,7 +68,7 @@ suspend fun <T> safeApiCall(
         try {
             ResultWrapper.Success(apiCall.invoke())
         } catch (throwable: Throwable) {
-            when(throwable) {
+            when (throwable) {
                 is HttpException -> {
                     var body = throwable.code()
                     ResultWrapper.NetworkError(body)

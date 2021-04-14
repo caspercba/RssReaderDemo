@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
                 .replace(R.id.fragment_container, LoginFragment()).commit()
         } else {
             supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, ListFragment()).commit()
+                .replace(R.id.fragment_container, FeedListFragment()).commit()
         }
     }
 }

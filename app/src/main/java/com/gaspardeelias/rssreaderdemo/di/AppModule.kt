@@ -1,7 +1,6 @@
 package com.gaspardeelias.rssreaderdemo.di
 
 import android.content.Context
-import com.gaspardeelias.rssreaderdemo.BuildConfig
 import com.gaspardeelias.rssreaderdemo.repository.Repository
 import com.gaspardeelias.rssreaderdemo.repository.RepositoryImpl
 import com.gaspardeelias.rssreaderdemo.repository.network.RssRetrofit
@@ -11,8 +10,10 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
+import okhttp3.Request
+import okhttp3.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
@@ -25,15 +26,21 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideOkHttpClient() = if (BuildConfig.DEBUG) {
-        val loggingInterceptor = HttpLoggingInterceptor()
-        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
-        OkHttpClient.Builder()
-            .addInterceptor(loggingInterceptor)
-            .build()
-    } else {
-        OkHttpClient
+    fun provideOkHttpClient(prefs: Prefs): OkHttpClient {
+
+        val authInterceptor = object: Interceptor {
+            override fun intercept(chain: Interceptor.Chain): Response {
+                val newRequest: Request = chain.request().newBuilder()
+                    .addHeader("Authorization", "Bearer ${prefs.token}")
+                    .build()
+                return chain.proceed(newRequest)
+            }
+
+        }
+
+        return OkHttpClient
             .Builder()
+            .addInterceptor(authInterceptor)
             .build()
     }
 

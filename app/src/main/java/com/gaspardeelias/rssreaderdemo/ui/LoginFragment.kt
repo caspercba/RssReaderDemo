@@ -11,18 +11,13 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.gaspardeelias.rssreaderdemo.R
 import com.gaspardeelias.rssreaderdemo.databinding.LoginFragmentBinding
-import com.gaspardeelias.rssreaderdemo.repository.network.RssRetrofit
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
 class LoginFragment : Fragment() {
 
     private val viewModel: LoginVM by viewModels()
-
-    @Inject
-    lateinit var rssRetrofit: RssRetrofit
 
     private var _binding: LoginFragmentBinding? = null
     private val binding get() = _binding!!
@@ -69,7 +64,7 @@ class LoginFragment : Fragment() {
     }
 
     private fun showNext() {
-        parentFragmentManager.beginTransaction().replace(R.id.fragment_container, ListFragment())
+        parentFragmentManager.beginTransaction().replace(R.id.fragment_container, FeedListFragment())
             .commit()
     }
 

@@ -2,7 +2,7 @@ package com.gaspardeelias.rssreaderdemo.repository.network.dto
 
 import com.google.gson.annotations.SerializedName
 
-data class RegisterDto(val accessToken: String)
+data class RegisterDto(@SerializedName("access_token") val token: String)
 data class LoginDto(
     @SerializedName("user_id") val userId: Int,
     @SerializedName("access_token") val token: String
@@ -21,4 +21,4 @@ data class ArticleDto(
 
 data class ArticlesDto(val status: String, val articles: List<ArticleDto>)
 
-data class RefreshDto(@SerializedName("new_articles")val newArticles: Int)
+data class RefreshDto(@SerializedName("new_articles") val newArticles: Int)
